@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Column;
 
 @Entity
 public class Folha {
@@ -12,7 +13,9 @@ public class Folha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long id_user;
+
+    @Column(name="id_user")
+    private Long idUser;
     @Lob
     private String folha;
 
@@ -25,11 +28,11 @@ public class Folha {
         this.id = id;
     }
     public Long getIdUser(){
-        return id_user;
+        return idUser;
     }
 
-    public void setIdUser(Long id_user){
-        this.id_user = id_user;
+    public void setIdUser(Long idUser){
+        this.idUser = idUser;
     }
     public String getFolha(){
         return folha;

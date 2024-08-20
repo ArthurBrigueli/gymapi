@@ -40,4 +40,10 @@ public class FolhaController {
         return folhaService.deleteFolha(id);
     }
 
+
+    @GetMapping("/user/{idUser}")
+    public List<Folha> getAllFolhasById(@PathVariable Long idUser){
+        return folhaService.getAllFolhasById(idUser);
+    }
+
 }

@@ -2,6 +2,8 @@ package com.example.gympumpapi.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.gympumpapi.ResourceNotFoundException;
+import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.entity.Treino;
 import com.example.gympumpapi.repository.TreinoRepository;
 import java.util.Optional;
@@ -69,5 +71,18 @@ public class TreinoService {
 
     }
 
+    public List<Treino> getAllTreinosByIdUser(Long idUser){
+        return treinoRepository.findTreinoByIdUser(idUser);
+    }
+
+
+    public Treino getTreinoByIdAndIdUser(Long id, Long idUser){
+        
+        return treinoRepository.findTreinoByIdAndIdUser(id, idUser)
+        .orElseThrow(() -> new ResourceNotFoundException("Treino não encontrada para o id " + id + " e usuário " + idUser));
+        
+        
+
+    }
 
 }

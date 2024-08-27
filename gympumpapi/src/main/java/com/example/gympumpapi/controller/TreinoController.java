@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gympumpapi.DTO.ExercicioRequest;
+import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.entity.Treino;
 import com.example.gympumpapi.service.TreinoService;
 import java.util.List;
@@ -65,5 +66,15 @@ public class TreinoController {
 
         return treinoService.getAllById(id);
 
+    }
+
+    @GetMapping("/user/{idUser}")
+    public List<Treino> getAllTreinosByIdUser(@PathVariable Long idUser){
+        return treinoService.getAllTreinosByIdUser(idUser);
+    }
+
+    @GetMapping("/user/treino/{id}/{idUser}")
+    public Treino getTreinoByIdAndIdUser(@PathVariable Long id, @PathVariable Long idUser){
+        return treinoService.getTreinoByIdAndIdUser(id, idUser);
     }
 }

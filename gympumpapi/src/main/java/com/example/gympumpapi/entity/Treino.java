@@ -1,5 +1,6 @@
 package com.example.gympumpapi.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +14,8 @@ public class Treino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    private Long id_user;
+    @Column(name = "id_user")
+    private Long idUser;
     private String name;
     private String date;
     @Lob
@@ -30,11 +32,11 @@ public class Treino {
     }
 
     public Long getIdUser() {
-        return id_user;
+        return idUser;
     }
 
     public void setIdUser(Long id_user) {
-        this.id_user = id_user;
+        this.idUser = id_user;
     }
 
     public String getName() {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.UserRepository;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +14,13 @@ public class UserService {
     
     UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder){
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService){
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.emailService = emailService;
+        
     }
 
 
@@ -52,6 +56,36 @@ public class UserService {
         }
     
         return false;
+    }
+
+    public String forgotPassword(String email, String code){
+        
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        String subject = "Seu codigo para trocar senha";
+
+        if(userOpt.isPresent()){
+            emailService.sendSimpleEmail(email, subject, code);
+            return code;
+        }else{
+            return "Usuario nao encontrado";
+        }
+
+    }
+
+
+    public String newPassword(String email, String password){
+        Optional<User> emailOpt = userRepository.findByEmail(email);
+        
+        if(emailOpt.isPresent()){
+            User user = emailOpt.get();
+            String encodePassword = encoder.encode(password);
+            user.setPassword(encodePassword);
+            userRepository.save(user);
+            return "Senha alterada";
+
+        }else{
+            return "Usuario nao encontrado";
+        }
     }
     
 

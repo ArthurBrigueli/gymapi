@@ -3,11 +3,8 @@ package com.example.gympumpapi.service;
 import org.springframework.stereotype.Service;
 
 import com.example.gympumpapi.entity.Folha;
-import com.example.gympumpapi.entity.Treino;
 import com.example.gympumpapi.repository.FolhaRepository;
 import java.util.List;
-import java.util.Optional;
-import java.util.Collections;
 
 @Service
 public class FolhaService {

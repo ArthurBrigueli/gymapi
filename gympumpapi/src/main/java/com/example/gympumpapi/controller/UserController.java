@@ -58,6 +58,17 @@ public class UserController {
     }
 
 
+    @PostMapping("/forgotpassword/{email}")
+    public String sendEmail(@PathVariable String email, @RequestBody String code){
+        return userService.forgotPassword(email, code);
+    }
+
+    @PostMapping("/forgotpassword/newpassword/{email}")
+    public String forgotPassword(@PathVariable String email, @RequestBody String password){
+        return userService.newPassword(email, password);
+    }
+
+
 
 
 

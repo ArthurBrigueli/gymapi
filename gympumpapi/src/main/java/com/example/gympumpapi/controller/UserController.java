@@ -1,5 +1,8 @@
 package com.example.gympumpapi.controller;
 
+import org.apache.catalina.connector.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,18 +13,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gympumpapi.DTO.LoginRequest;
+import com.example.gympumpapi.DTO.RegisterRequest;
+import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
+import com.example.gympumpapi.repository.UserRepository;
 import com.example.gympumpapi.service.UserService;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class UserController {
 
     UserService userService;
+    UserRepository userRepository;
+    private final PasswordEncoder encoder;
+    TokenService tokenService;
+    
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder encoder, TokenService tokenService){
         this.userService = userService;
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+        this.tokenService = tokenService;
     }
 
 
@@ -31,8 +45,24 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user){
-        return userService.registerUser(user);
+    public ResponseEntity registerUser(@RequestBody RegisterRequest body){
+        Optional<User> user = this.userRepository.findByEmail(body.email());
+
+        if(user.isEmpty()){
+            User newUser = new User();
+            newUser.setPassword(encoder.encode(body.password()));
+            newUser.setEmail(body.email());
+            newUser.setName(body.name());
+            this.userRepository.save(newUser);
+
+            return ResponseEntity.ok().build();
+        }
+
+
+        return ResponseEntity.badRequest().build();
+
+        
+
     }
 
     @PutMapping("/update")
@@ -47,14 +77,16 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody LoginRequest loginRequest){
-        boolean isAuthenticated = userService.loginUser(loginRequest.getName(), loginRequest.getPassword());
+    public ResponseEntity loginUser(@RequestBody LoginRequest loginRequest){
 
-        if(isAuthenticated){
-            return "Usuario logado";
-        }else{
-            return "Usuario incorreto";
+        User user = this.userRepository.findByName(loginRequest.getName()).orElseThrow(()-> new RuntimeException("User Not found"));
+        if(encoder.matches(loginRequest.getPassword(), user.getPassword())){
+            String token = tokenService.generateToken(user);
+            return ResponseEntity.ok(token);
         }
+
+        return ResponseEntity.badRequest().build();
+
     }
 
 

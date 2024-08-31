@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gympumpapi.DTO.ExercicioRequest;
-import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.entity.Treino;
 import com.example.gympumpapi.service.TreinoService;
 import java.util.List;

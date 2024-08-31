@@ -3,7 +3,6 @@ package com.example.gympumpapi.service;
 import org.springframework.stereotype.Service;
 
 import com.example.gympumpapi.ResourceNotFoundException;
-import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.entity.Treino;
 import com.example.gympumpapi.repository.TreinoRepository;
 import java.util.Optional;

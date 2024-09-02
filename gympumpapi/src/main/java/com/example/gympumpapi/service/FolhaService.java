@@ -1,9 +1,13 @@
 package com.example.gympumpapi.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.repository.FolhaRepository;
+
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 @Service
@@ -30,13 +34,17 @@ public class FolhaService {
         return "Deletado";
     }
     
-    public List<Folha> getAllFolhasById(Long idUser){
-
-        List<Folha> folhaOpt = folhaRepository.findByIdUser(idUser);
-
-        return folhaOpt;
+    public Folha getAllFolhasById(Long idUser){
+        return folhaRepository.findByIdUser(idUser);
         
 
+    }
+
+
+    @Transactional
+    public ResponseEntity deleteFolhaByIdUser(Long idUser){
+        folhaRepository.deleteByIdUser(idUser);
+        return ResponseEntity.ok().build();
     }
 
 }

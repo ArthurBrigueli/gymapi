@@ -1,8 +1,11 @@
 package com.example.gympumpapi.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.gympumpapi.entity.User;
+import com.example.gympumpapi.repository.FolhaRepository;
+import com.example.gympumpapi.repository.TreinoRepository;
 import com.example.gympumpapi.repository.UserRepository;
 
 
@@ -15,12 +18,15 @@ public class UserService {
     UserRepository userRepository;
     private final PasswordEncoder encoder;
     private EmailService emailService;
+    FolhaRepository folhaRepository;
+    TreinoRepository treinoRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService){
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService, FolhaRepository folhaRepository, TreinoRepository treinoRepository){
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.emailService = emailService;
-        
+        this.folhaRepository = folhaRepository;
+        this.treinoRepository = treinoRepository;
     }
 
 
@@ -40,7 +46,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public String deleteUserById(Long id){
+        folhaRepository.deleteByIdUser(id);
+        treinoRepository.deleteAllByIdUser(id);
         userRepository.deleteById(id);
         return "Deletado";
     }

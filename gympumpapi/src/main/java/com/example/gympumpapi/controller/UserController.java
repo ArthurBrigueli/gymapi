@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gympumpapi.DTO.LoginRequest;
+import com.example.gympumpapi.DTO.LoginResponse;
+import com.example.gympumpapi.DTO.PasswordResponse;
 import com.example.gympumpapi.DTO.RegisterRequest;
+import com.example.gympumpapi.DTO.UserDTO;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.UserRepository;
@@ -43,27 +46,6 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity registerUser(@RequestBody RegisterRequest body){
-        Optional<User> user = this.userRepository.findByEmail(body.email());
-
-        if(user.isEmpty()){
-            User newUser = new User();
-            newUser.setPassword(encoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
-            this.userRepository.save(newUser);
-
-            return ResponseEntity.ok().build();
-        }
-
-
-        return ResponseEntity.badRequest().build();
-
-        
-
-    }
-
     @PutMapping("/update")
     public User updateUser(@RequestBody User user){
         return userService.updateUser(user);
@@ -81,7 +63,12 @@ public class UserController {
         User user = this.userRepository.findByName(loginRequest.getName()).orElseThrow(()-> new RuntimeException("User Not found"));
         if(encoder.matches(loginRequest.getPassword(), user.getPassword())){
             String token = tokenService.generateToken(user);
-            return ResponseEntity.ok(token);
+
+            UserDTO userDto = new UserDTO(user.getId(), user.getName(), user.getEmail());
+
+            LoginResponse loginResponse = new LoginResponse(token, userDto);
+
+            return ResponseEntity.ok(loginResponse);
         }
 
         return ResponseEntity.badRequest().build();
@@ -95,8 +82,37 @@ public class UserController {
     }
 
     @PostMapping("/forgotpassword/newpassword/{email}")
-    public String forgotPassword(@PathVariable String email, @RequestBody String password){
-        return userService.newPassword(email, password);
+    public String forgotPassword(@PathVariable String email, @RequestBody PasswordResponse passwordResponse){
+        Optional<User> user = this.userRepository.findByEmail(email);
+
+
+        if(user.isPresent()){
+            User newUser = user.get();
+            System.out.println(passwordResponse.password());
+            newUser.setPassword(encoder.encode(passwordResponse.password()));
+            this.userRepository.save(newUser);
+            return "Alterado";
+        }
+        return "quack";
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity registerUser(@RequestBody RegisterRequest body){
+        Optional<User> user = this.userRepository.findByEmail(body.email());
+
+        if(user.isEmpty()){
+            User newUser = new User();
+            newUser.setPassword(encoder.encode(body.password()));
+            newUser.setEmail(body.email());
+            newUser.setName(body.name());
+            this.userRepository.save(newUser);
+
+            return ResponseEntity.ok().build();
+        }
+
+
+        return ResponseEntity.badRequest().build();
     }
 
 

@@ -1,8 +1,12 @@
 package com.example.gympumpapi.service;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.gympumpapi.DTO.TokenPersistenceDTO;
+import com.example.gympumpapi.DTO.UserResponsePersistenceDTO;
+import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.FolhaRepository;
 import com.example.gympumpapi.repository.TreinoRepository;
@@ -20,13 +24,15 @@ public class UserService {
     private EmailService emailService;
     FolhaRepository folhaRepository;
     TreinoRepository treinoRepository;
+    TokenService tokenService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService, FolhaRepository folhaRepository, TreinoRepository treinoRepository){
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService, FolhaRepository folhaRepository, TreinoRepository treinoRepository, TokenService tokenService){
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.emailService = emailService;
         this.folhaRepository = folhaRepository;
         this.treinoRepository = treinoRepository;
+        this.tokenService = tokenService;
     }
 
 
@@ -95,6 +101,29 @@ public class UserService {
         }else{
             return "Usuario nao encontrado";
         }
+    }
+
+
+    public ResponseEntity persistenceLogin(String token){
+        String email = tokenService.validateToken(token);
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+
+        if(userOpt.isPresent()){
+            User newUser = userOpt.get();
+            UserResponsePersistenceDTO response = new UserResponsePersistenceDTO();
+            response.setId(newUser.getId());
+            response.setName(newUser.getName());
+            response.setEmail(newUser.getEmail());
+
+            return ResponseEntity.ok(response);
+
+        }
+
+
+        return ResponseEntity.badRequest().build();
+
     }
     
 

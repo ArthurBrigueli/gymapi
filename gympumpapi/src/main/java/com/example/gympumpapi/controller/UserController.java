@@ -15,6 +15,7 @@ import com.example.gympumpapi.DTO.LoginRequest;
 import com.example.gympumpapi.DTO.LoginResponse;
 import com.example.gympumpapi.DTO.PasswordResponse;
 import com.example.gympumpapi.DTO.RegisterRequest;
+import com.example.gympumpapi.DTO.TokenPersistenceDTO;
 import com.example.gympumpapi.DTO.UserDTO;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
@@ -113,6 +114,12 @@ public class UserController {
 
 
         return ResponseEntity.badRequest().build();
+    }
+
+
+    @PostMapping("/persistence")
+    public ResponseEntity persistenceLogin(@RequestBody TokenPersistenceDTO tokenPersistenceDTO){
+        return userService.persistenceLogin(tokenPersistenceDTO.getToken());
     }
 
 

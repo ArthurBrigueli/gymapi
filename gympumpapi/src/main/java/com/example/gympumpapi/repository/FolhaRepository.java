@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface FolhaRepository extends JpaRepository<Folha, Long>{
-    List<Folha> findByIdUser(Long idUser);
+    Folha findByIdUser(Long idUser);
+    void deleteByIdUser(Long idUser);
 }   

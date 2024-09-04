@@ -4,6 +4,7 @@ import com.example.gympumpapi.entity.Folha;
 import com.example.gympumpapi.service.FolhaService;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,8 +43,14 @@ public class FolhaController {
 
 
     @GetMapping("/user/{idUser}")
-    public List<Folha> getAllFolhasById(@PathVariable Long idUser){
+    public Folha getAllFolhasById(@PathVariable Long idUser){
         return folhaService.getAllFolhasById(idUser);
+    }
+
+
+    @DeleteMapping("/folha/delete/user/{idUser}")
+    public ResponseEntity deleteFolhaByIdUser(@PathVariable Long idUser){
+        return folhaService.deleteFolhaByIdUser(idUser);
     }
 
 }

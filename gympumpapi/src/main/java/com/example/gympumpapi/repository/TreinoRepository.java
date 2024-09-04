@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface TreinoRepository extends JpaRepository<Treino, Long>{
     List<Treino> findTreinoByIdUser(Long idUser);
     Optional<Treino> findTreinoByIdAndIdUser(Long id, Long idUser);
+    void deleteAllByIdUser(Long idUser);
+    void deleteByIdAndIdUser(Long id, Long idUser);
 }

@@ -1,4 +1,5 @@
 package com.example.gympumpapi.service;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -124,6 +125,28 @@ public class UserService {
 
         return ResponseEntity.badRequest().build();
 
+    }
+
+
+    public ResponseEntity verificationPassword(String email, String password){
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+
+            if(encoder.matches(password, user.getPassword())){
+                return ResponseEntity.ok().build();
+            }else{
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+
+        return ResponseEntity.badRequest().build();
+
+
+        
     }
     
 

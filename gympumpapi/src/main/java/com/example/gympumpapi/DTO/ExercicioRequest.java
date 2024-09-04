@@ -1,6 +1,10 @@
 package com.example.gympumpapi.DTO;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ExercicioRequest {
+    
     private Long id;
     private String exercicios;
 
@@ -12,12 +16,18 @@ public class ExercicioRequest {
         this.id = id;
     }
 
-    public String getExercicios(){
-        return exercicios;
+    public JsonNode getExercicios(){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readTree(exercicios);
+        } catch (Exception e) {
+            // Trate a exceção adequadamente, ou retorne null em caso de erro
+            return null;
+        }
     }
 
-    public void setExercicios(String exercicios){
-        this.exercicios = exercicios;
+    public void setExercicios(JsonNode exercicios){
+        this.exercicios = exercicios.toString();
     }
 
 }

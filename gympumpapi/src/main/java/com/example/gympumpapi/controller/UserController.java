@@ -17,6 +17,7 @@ import com.example.gympumpapi.DTO.PasswordResponse;
 import com.example.gympumpapi.DTO.RegisterRequest;
 import com.example.gympumpapi.DTO.TokenPersistenceDTO;
 import com.example.gympumpapi.DTO.UserDTO;
+import com.example.gympumpapi.DTO.VerificationPasswordRequest;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.UserRepository;
@@ -120,6 +121,14 @@ public class UserController {
     @PostMapping("/persistence")
     public ResponseEntity persistenceLogin(@RequestBody TokenPersistenceDTO tokenPersistenceDTO){
         return userService.persistenceLogin(tokenPersistenceDTO.getToken());
+    }
+
+
+
+
+    @PostMapping("/verification/password")
+    public ResponseEntity verificationPassword(@RequestBody VerificationPasswordRequest verificationPasswordRequest){
+        return userService.verificationPassword(verificationPasswordRequest.getEmail(), verificationPasswordRequest.getPassword());
     }
 
 

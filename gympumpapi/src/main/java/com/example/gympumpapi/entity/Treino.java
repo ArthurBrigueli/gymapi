@@ -1,5 +1,8 @@
 package com.example.gympumpapi.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -55,12 +58,18 @@ public class Treino {
         this.date = date;
     }
 
-    public String getExercicios() {
-        return exercicios;
+    public JsonNode getExercicios() {
+       try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readTree(exercicios);
+        } catch (Exception e) {
+            // Trate a exceção adequadamente, ou retorne null em caso de erro
+            return null;
+        }
     }
 
-    public void setExercicios(String exercicios) {
-        this.exercicios = exercicios;
+    public void setExercicios(JsonNode exercicios) {
+        this.exercicios = exercicios.toString();
     }
 
 

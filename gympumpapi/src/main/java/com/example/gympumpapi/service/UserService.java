@@ -1,18 +1,19 @@
 package com.example.gympumpapi.service;
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.gympumpapi.DTO.TokenPersistenceDTO;
+
 import com.example.gympumpapi.DTO.UserResponsePersistenceDTO;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.FolhaRepository;
+import com.example.gympumpapi.repository.FriendRespository;
+import com.example.gympumpapi.repository.Status;
 import com.example.gympumpapi.repository.TreinoRepository;
 import com.example.gympumpapi.repository.UserRepository;
-
+import com.example.gympumpapi.entity.Friend;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,19 +27,35 @@ public class UserService {
     FolhaRepository folhaRepository;
     TreinoRepository treinoRepository;
     TokenService tokenService;
+    FriendRespository friendRespository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService, FolhaRepository folhaRepository, TreinoRepository treinoRepository, TokenService tokenService){
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, EmailService emailService, FolhaRepository folhaRepository, TreinoRepository treinoRepository, TokenService tokenService, FriendRespository friendRespository){
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.emailService = emailService;
         this.folhaRepository = folhaRepository;
         this.treinoRepository = treinoRepository;
         this.tokenService = tokenService;
+        this.friendRespository = friendRespository;
     }
 
 
     public List<User> getAllUser() {
         return userRepository.findAll();
+    }
+
+
+    public ResponseEntity getUserByName(String name){
+
+        List<User> users = userRepository.findAllByName(name);
+
+        if(users.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(users);
+
+
     }
 
     public User registerUser(User user){
@@ -144,11 +161,38 @@ public class UserService {
 
 
         return ResponseEntity.badRequest().build();
-
-
-        
     }
-    
+
+
+    public List<Friend> getInvited(Long idUser){
+        return friendRespository.findAllBySenderIdAndStatus(idUser, Status.PENDING);
+    }
+
+    public String acceptInvitFriend(Long id){
+        Optional<Friend> friendOpt = friendRespository.findById(id);
+
+        if(friendOpt.isPresent()){
+            Friend newFriend = friendOpt.get();
+            newFriend.setStatus(Status.ACCEPTED);
+            friendRespository.save(newFriend);
+            return "aceitado";
+        }
+
+        return "nao encotrado";
+
+
+    }
+
+
+    public List<Friend> getYourFriends(Long idUser){
+        return friendRespository.findFriendsByStatus(idUser, Status.ACCEPTED);
+    }
+
+
+    @Transactional
+    public void recuseInviteFriend(Long idInvited){
+        friendRespository.deleteById(idInvited);
+    }
 
 
 

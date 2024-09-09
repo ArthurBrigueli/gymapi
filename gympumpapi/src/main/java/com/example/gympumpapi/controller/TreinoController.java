@@ -89,7 +89,7 @@ public class TreinoController {
 
 
     @DeleteMapping("/delete/{id}/user/{idUser}")
-    public ResponseEntity deleteByIdAndIdUser(@PathVariable Long id,  @PathVariable Long idUser){
+    public ResponseEntity deleteByIdAndIdUser(@PathVariable Long id,  @PathVariable("idUser") Long idUser){
         System.out.println(id);
         System.out.println(idUser);
         return treinoService.deleteByIdAndIdUser(id, idUser);

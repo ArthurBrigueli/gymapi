@@ -19,8 +19,10 @@ import com.example.gympumpapi.DTO.TokenPersistenceDTO;
 import com.example.gympumpapi.DTO.UserDTO;
 import com.example.gympumpapi.DTO.VerificationPasswordRequest;
 import com.example.gympumpapi.configSecurity.TokenService;
+import com.example.gympumpapi.entity.Friend;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.UserRepository;
+import com.example.gympumpapi.service.FriendService;
 import com.example.gympumpapi.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -33,19 +35,26 @@ public class UserController {
     UserRepository userRepository;
     private final PasswordEncoder encoder;
     TokenService tokenService;
+    FriendService friendService;
     
 
-    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder encoder, TokenService tokenService){
+    public UserController(UserService userService, UserRepository userRepository, PasswordEncoder encoder, TokenService tokenService, FriendService friendService){
         this.userService = userService;
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.tokenService = tokenService;
+        this.friendService = friendService;
     }
 
 
     @GetMapping("/users")
     public List<User> getAllUser(){
         return userService.getAllUser();
+    }
+
+    @GetMapping("/search/user/{name}")
+    public ResponseEntity getAllById(@PathVariable String name){
+        return userService.getUserByName(name);
     }
 
     @PutMapping("/update")
@@ -130,6 +139,30 @@ public class UserController {
     public ResponseEntity verificationPassword(@RequestBody VerificationPasswordRequest verificationPasswordRequest){
         return userService.verificationPassword(verificationPasswordRequest.getEmail(), verificationPasswordRequest.getPassword());
     }
+
+
+    @GetMapping("/user/invitedfriend/{senderId}")
+    public List<Friend> getInvitedFriend(@PathVariable Long senderId){
+        return userService.getInvited(senderId);
+    }
+
+
+    @GetMapping("/user/invitedfriend/accept/{id}")
+    public String acceptInvitedFriend(@PathVariable Long id){
+        return userService.acceptInvitFriend(id);
+    }
+
+    @GetMapping("/user/yourfriends/{idUser}")
+    public List<Friend> getAllYourFriends(@PathVariable Long idUser){
+        return userService.getYourFriends(idUser);
+    }
+
+
+    @DeleteMapping("/user/recuseinvite/{idInvited}")
+    public void recuseInvited(@PathVariable Long idInvited){
+        userService.recuseInviteFriend(idInvited);
+    }
+
 
 
 

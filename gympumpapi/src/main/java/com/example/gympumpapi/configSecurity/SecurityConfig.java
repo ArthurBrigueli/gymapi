@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/forgotpassword/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/forgotpassword/newpassword/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/search/user/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/friends/envited").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);

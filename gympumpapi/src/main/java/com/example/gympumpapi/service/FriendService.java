@@ -1,8 +1,12 @@
 package com.example.gympumpapi.service;
 
 
+import com.example.gympumpapi.DTO.UserSearchDTO;
 import com.example.gympumpapi.entity.Friend;
 import com.example.gympumpapi.repository.FriendRespository;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 
@@ -10,15 +14,17 @@ import org.springframework.stereotype.Service;
 public class FriendService {
 
     FriendRespository friendRespository;
+    UserService userService;
 
-    public FriendService(FriendRespository friendRespository){
+    public FriendService(FriendRespository friendRespository, UserService userService){
         this.friendRespository = friendRespository;
+        this.userService = userService;
     }
 
 
-    public String sendInvitedFriend(Friend friend){
+    public List<UserSearchDTO> sendInvitedFriend(Friend friend){
         friendRespository.save(friend);
-        return "enviado";
+        return userService.findUsersByName(friend.getNameSender());
     }
 
 

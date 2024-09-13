@@ -1,6 +1,7 @@
 package com.example.gympumpapi.controller;
 
 
+import com.example.gympumpapi.DTO.UserSearchDTO;
 import com.example.gympumpapi.entity.Friend;
 import com.example.gympumpapi.repository.FriendRespository;
 import com.example.gympumpapi.service.FriendService;
@@ -28,7 +29,7 @@ public class FriendController {
 
 
     @PostMapping("/envited")
-    public String sendEnvitedFriend(@RequestBody Friend friend){
+    public List<UserSearchDTO> sendEnvitedFriend(@RequestBody Friend friend){
         return friendService.sendInvitedFriend(friend);
     }
 

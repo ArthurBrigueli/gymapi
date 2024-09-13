@@ -15,7 +15,9 @@ public class Friend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long senderId;
+    private String nameSender;
     private Long receiverId;
+    private String nameReceiver;
     private Status status = Status.PENDING;
 
     public Long getId(){
@@ -34,6 +36,21 @@ public class Friend {
         this.senderId = senderId;
     }
 
+    public String getNameSender(){
+        return nameSender;
+    }
+
+    public void setNameSender(String nameSender){
+        this.nameSender = nameSender;
+    }
+
+    public String getNameReceiver(){
+        return nameReceiver;
+    }
+
+    public void setNameReceiver(String nameReceiver){
+        this.nameReceiver = nameReceiver;
+    }
 
     public Long getReceiverId(){
         return receiverId;

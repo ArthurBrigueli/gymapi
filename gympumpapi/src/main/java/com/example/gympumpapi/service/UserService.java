@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.example.gympumpapi.DTO.UserResponsePersistenceDTO;
+import com.example.gympumpapi.DTO.UserSearchDTO;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.User;
 import com.example.gympumpapi.repository.FolhaRepository;
@@ -192,6 +193,11 @@ public class UserService {
     @Transactional
     public void recuseInviteFriend(Long idInvited){
         friendRespository.deleteById(idInvited);
+    }
+
+
+    public List<UserSearchDTO> findUsersByName(String name) {
+        return friendRespository.findUsersAndFriendStatusByName(name);
     }
 
 

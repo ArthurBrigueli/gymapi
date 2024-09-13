@@ -17,6 +17,7 @@ import com.example.gympumpapi.DTO.PasswordResponse;
 import com.example.gympumpapi.DTO.RegisterRequest;
 import com.example.gympumpapi.DTO.TokenPersistenceDTO;
 import com.example.gympumpapi.DTO.UserDTO;
+import com.example.gympumpapi.DTO.UserSearchDTO;
 import com.example.gympumpapi.DTO.VerificationPasswordRequest;
 import com.example.gympumpapi.configSecurity.TokenService;
 import com.example.gympumpapi.entity.Friend;
@@ -53,8 +54,8 @@ public class UserController {
     }
 
     @GetMapping("/search/user/{name}")
-    public ResponseEntity getAllById(@PathVariable String name){
-        return userService.getUserByName(name);
+    public List<UserSearchDTO> getAllById(@PathVariable String name){
+        return userService.findUsersByName(name);
     }
 
     @PutMapping("/update")

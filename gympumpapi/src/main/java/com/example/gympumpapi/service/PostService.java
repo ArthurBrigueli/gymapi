@@ -10,6 +10,7 @@ import com.example.gympumpapi.entity.Friend;
 import com.example.gympumpapi.entity.Post;
 import com.example.gympumpapi.repository.FriendRespository;
 import com.example.gympumpapi.repository.PostRepository;
+import com.example.gympumpapi.repository.Status;
 
 @Service
 public class PostService {
@@ -32,13 +33,16 @@ public class PostService {
 
 
     public List<Post> getAllPost(Long idUser){
-        List<Friend> friends = friendRespository.findAllBySenderIdOrReceiverId(idUser, idUser);
+        List<Friend> friends = friendRespository.findAllBySenderIdOrReceiverIdAndStatus(idUser, idUser, Status.ACCEPTED);
         List<Long> friendIds = friends.stream()
                                       .map(friend -> friend.getSenderId().equals(idUser) ? friend.getReceiverId() : friend.getSenderId())
                                       .collect(Collectors.toList());
 
         return postRepository.findByIdUserIn(friendIds);
     }
+
+
+
 
 
 

@@ -21,6 +21,7 @@ public class Post {
     private Long id;
     
     private Long idUser;
+    private String nameUser;
     
     private String title;
 
@@ -39,6 +40,15 @@ public class Post {
     }
 
     // Getters and Setters
+
+    public String getNameUser(){
+        return nameUser;
+    }
+
+    public void setNameUser(String nameUser){
+        this.nameUser = nameUser;
+    }
+
 
     public Long getId() {
         return id;

@@ -13,6 +13,8 @@ public interface FriendRespository extends JpaRepository<Friend, Long> {
 
     List<Friend> findAllBySenderIdAndStatus(Long senderId, Status status);
     List<Friend> findAllBySenderIdOrReceiverId(Long senderId, Long receiverId);
+    List<Friend> findAllBySenderIdOrReceiverIdAndStatus(Long senderId, Long receiverId, Status status);
+    
     @Query("SELECT f FROM Friend f WHERE (f.senderId = :userId OR f.receiverId = :userId) AND f.status = :status")
     List<Friend> findFriendsByStatus(@Param("userId") Long userId, @Param("status") Status status);
 
